@@ -115,3 +115,19 @@ def test_model_structure_column_lenghts(model, field_name, expected_length):
     assert (
         field.max_length == expected_length
     ), f"Field '{field_name}' has unexpected max lenght"
+
+
+@pytest.mark.parametrize(
+    "model, field_name, is_unique",
+    [
+        (Category, "id", True),
+        (Category, "name", False),
+        (Category, "slug", True),
+        (Category, "is_active", False),
+        (Category, "level", False),
+    ],
+)
+def test_model_structure_unique_fields(model, field_name, is_unique):
+    field = model._meta.get_field(field_name)
+
+    assert field.unique == is_unique, f"Field '{field_name}' uniqueness mismatch"
