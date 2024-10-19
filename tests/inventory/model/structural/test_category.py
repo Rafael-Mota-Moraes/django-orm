@@ -92,6 +92,7 @@ def test_model_structure_nullable_constraints(model, field_name, expected_nullab
     "model, field_name, expected_default_value",
     [
         (Category, "is_active", False),
+        (Category, "level", 100),
     ],
 )
 def test_model_structure_default_values(model, field_name, expected_default_value):
@@ -99,3 +100,18 @@ def test_model_structure_default_values(model, field_name, expected_default_valu
     default_value = field.default
 
     assert default_value == expected_default_value
+
+
+@pytest.mark.parametrize(
+    "model, field_name, expected_length",
+    [
+        (Category, "name", 100),
+        (Category, "slug", 100),
+    ],
+)
+def test_model_structure_column_lenghts(model, field_name, expected_length):
+    field = model._meta.get_field(field_name)
+
+    assert (
+        field.max_length == expected_length
+    ), f"Field '{field_name}' has unexpected max lenght"

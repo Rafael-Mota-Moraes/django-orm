@@ -9,10 +9,10 @@ class Category(models.Model):
         max_length=100,
         unique=True,
     )
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=100)
     is_active = models.BooleanField(default=False)
     parent = models.ForeignKey("self", on_delete=models.PROTECT, null=True, blank=True)
-    level = models.IntegerField()
+    level = models.IntegerField(default=100)
 
     class Meta:
         verbose_name = "Inventory Category"
