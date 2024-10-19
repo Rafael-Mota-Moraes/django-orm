@@ -68,3 +68,21 @@ def test_model_structure_relationship(
 
     assert field.null == allow_null
     assert field.blank == allow_blank
+
+
+@pytest.mark.parametrize(
+    "model, field_name, expected_nullable",
+    [
+        (Category, "id", False),
+        (Category, "name", False),
+        (Category, "slug", False),
+        (Category, "is_active", False),
+        (Category, "level", False),
+    ],
+)
+def test_model_structure_nullable_constraints(model, field_name, expected_nullable):
+    field = model._meta.get_field(field_name)
+
+    assert (
+        field.null is expected_nullable
+    ), f"Field '{field_name}' has unexpected nullable constraint"
