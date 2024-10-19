@@ -86,3 +86,16 @@ def test_model_structure_nullable_constraints(model, field_name, expected_nullab
     assert (
         field.null is expected_nullable
     ), f"Field '{field_name}' has unexpected nullable constraint"
+
+
+@pytest.mark.parametrize(
+    "model, field_name, expected_default_value",
+    [
+        (Category, "is_active", False),
+    ],
+)
+def test_model_structure_default_values(model, field_name, expected_default_value):
+    field = model._meta.get_field(field_name)
+    default_value = field.default
+
+    assert default_value == expected_default_value
