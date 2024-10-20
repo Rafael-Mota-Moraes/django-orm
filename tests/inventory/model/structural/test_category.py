@@ -118,6 +118,22 @@ def test_model_structure_column_lenghts(model, field_name, expected_length):
 
 
 @pytest.mark.parametrize(
+    "model, expected_field_count",
+    [
+        (
+            Category,
+            6,
+        ),
+    ],
+)
+def test_Model_structure_field_count(model, expected_field_count):
+    field_count = len(model._meta.fields)
+    assert (
+        field_count == expected_field_count
+    ), f"{model.__name__} model has {field_count} fields, expected {expected_field_count}"
+
+
+@pytest.mark.parametrize(
     "model, field_name, is_unique",
     [
         (Category, "id", True),
