@@ -38,6 +38,7 @@ class SeasonalEvent(models.Model):
 
 class ProductType(models.Model):
     name = models.CharField(max_length=100)
+    level = models.IntegerField(null=False)
     parent = models.ForeignKey("self", on_delete=models.PROTECT, null=True, blank=True)
 
     def __str__(self):
