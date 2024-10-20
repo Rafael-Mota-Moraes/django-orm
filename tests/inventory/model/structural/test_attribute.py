@@ -1,12 +1,12 @@
 import pytest
 from django.db import models
 
-from inventory.models import ProductType
+from inventory.models import Attribute
 
 
 def test_model_structure_table_exists():
     try:
-        from inventory.models import Category  # noqa F401
+        from inventory.models import Attribute  # noqa F401
     except ImportError:
         assert False
     else:
@@ -16,9 +16,9 @@ def test_model_structure_table_exists():
 @pytest.mark.parametrize(
     "model, field_name, expected_type",
     [
-        (ProductType, "id", models.AutoField),
-        (ProductType, "name", models.CharField),
-        (ProductType, "level", models.IntegerField),
+        (Attribute, "id", models.AutoField),
+        (Attribute, "name", models.CharField),
+        (Attribute, "description", models.TextField),
     ],
 )
 def test_model_structure_column_data_types(model, field_name, expected_type):
@@ -34,54 +34,11 @@ def test_model_structure_column_data_types(model, field_name, expected_type):
 
 
 @pytest.mark.parametrize(
-    "model, field_name, expected_type, related_model, on_delete_behavior, allow_null, allow_blank",
-    [
-        (
-            ProductType,
-            "parent",
-            models.ForeignKey,
-            ProductType,
-            models.PROTECT,
-            True,
-            True,
-        ),
-    ],
-)
-def test_model_structure_relationship(
-    model,
-    field_name,
-    expected_type,
-    related_model,
-    on_delete_behavior,
-    allow_null,
-    allow_blank,
-):
-    assert hasattr(
-        model, field_name
-    ), f"{model.name} model does not have '{field_name}' field"
-
-    field = model._meta.get_field(field_name)
-
-    assert isinstance(
-        field, expected_type
-    ), f"Field {field_name} is not type {expected_type}"
-
-    assert field.related_model == related_model
-
-    assert (
-        field.remote_field.on_delete == on_delete_behavior
-    ), f"'{field_name}' field does not have on_delete={on_delete_behavior}"
-
-    assert field.null == allow_null
-    assert field.blank == allow_blank
-
-
-@pytest.mark.parametrize(
     "model, field_name, expected_nullable",
     [
-        (ProductType, "id", False),
-        (ProductType, "name", False),
-        (ProductType, "level", False),
+        (Attribute, "id", False),
+        (Attribute, "name", False),
+        (Attribute, "description", True),
     ],
 )
 def test_model_structure_nullable_constraints(model, field_name, expected_nullable):
@@ -95,7 +52,7 @@ def test_model_structure_nullable_constraints(model, field_name, expected_nullab
 @pytest.mark.parametrize(
     "model, field_name, expected_length",
     [
-        (ProductType, "name", 100),
+        (Attribute, "name", 200),
     ],
 )
 def test_model_structure_column_lenghts(model, field_name, expected_length):
@@ -110,8 +67,8 @@ def test_model_structure_column_lenghts(model, field_name, expected_length):
     "model, expected_field_count",
     [
         (
-            ProductType,
-            4,
+            Attribute,
+            3,
         ),
     ],
 )
@@ -125,9 +82,9 @@ def test_Model_structure_field_count(model, expected_field_count):
 @pytest.mark.parametrize(
     "model, field_name, is_unique",
     [
-        (ProductType, "id", True),
-        (ProductType, "name", False),
-        (ProductType, "level", False),
+        (Attribute, "id", True),
+        (Attribute, "name", True),
+        (Attribute, "description", False),
     ],
 )
 def test_model_structure_unique_fields(model, field_name, is_unique):

@@ -85,7 +85,7 @@ class Product(models.Model):
 
 
 class Attribute(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     description = models.TextField(null=True)
 
     def __str__(self):
