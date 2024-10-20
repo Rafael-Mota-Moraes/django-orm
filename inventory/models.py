@@ -56,11 +56,11 @@ class Product(models.Model):
         BACKORDERED: "Back Ordered",
     }
 
-    pid = models.CharField(max_length=255)
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True)
+    pid = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=220, unique=True, blank=True)
     description = models.TextField(null=True)
-    is_digtial = models.BooleanField(default=False)
+    is_digitial = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
@@ -69,11 +69,18 @@ class Product(models.Model):
         choices=STOCK_STATUS,
         default=OUT_OF_STOCK,
     )
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, null=True, blank=True
+    )
     seasonal_event = models.ForeignKey(
         SeasonalEvent, on_delete=models.SET_NULL, null=True, blank=True
     )
-    product_type = models.ManyToManyField(ProductType, related_name="product_type")
+    product_type = models.ManyToManyField(
+        ProductType,
+        through="Product_ProductType",
+        related_name="product_type",
+        blank=False,
+    )
 
     def save(self, *args, **kwargs):
         if not self.slug:
