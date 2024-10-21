@@ -123,7 +123,7 @@ class ProductLine(models.Model):
 
 
 class ProductImage(models.Model):
-    alternative_text = models.CharField(max_length=200)
+    alternative_text = models.CharField(max_length=100)
     url = models.ImageField()
     order = models.IntegerField()
     product_line = models.ForeignKey(ProductLine, on_delete=models.CASCADE)
