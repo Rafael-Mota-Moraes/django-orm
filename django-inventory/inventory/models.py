@@ -1,6 +1,8 @@
 import uuid
 
 from django.db import models
+from django.db.models import Q
+from django.forms import ValidationError
 from django.utils.text import slugify
 
 
@@ -17,10 +19,17 @@ class Category(models.Model):
         verbose_name = "Inventory Category"
         verbose_name_plural = "Categories"
 
+        constraints = [models.CheckConstraint(check=~Q(name=""), name="name_not_empty")]
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def clean(self):
+        super().clean()
+        if self.name == "":
+            raise ValidationError({"name": "This field cannot be empty."})
 
     def __str__(self) -> str:
         return self.name
