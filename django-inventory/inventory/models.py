@@ -32,6 +32,9 @@ class SeasonalEvent(models.Model):
     end_date = models.DateTimeField()
     name = models.CharField(max_length=100, unique=True)
 
+    class Meta:
+        db_table = "inventory_seasonal_event"
+
     def __str__(self) -> str:
         return self.name
 
@@ -40,6 +43,9 @@ class ProductType(models.Model):
     name = models.CharField(max_length=100)
     level = models.IntegerField(null=False)
     parent = models.ForeignKey("self", on_delete=models.PROTECT, null=True, blank=True)
+
+    class Meta:
+        db_table = "inventory_product_type"
 
     def __str__(self):
         return self.name
@@ -103,6 +109,9 @@ class AttributeValue(models.Model):
     attribute_value = models.CharField(max_length=100)
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
 
+    class Meta:
+        db_table = "inventory_attribute_value"
+
     def __str__(self) -> str:
         return f"{self.attribute.name}: {self.attribute_value}"
 
@@ -121,12 +130,18 @@ class ProductLine(models.Model):
         related_name="attribute_values",
     )
 
+    class Meta:
+        db_table = "inventory_product_line"
+
 
 class ProductImage(models.Model):
     alternative_text = models.CharField(max_length=100)
     url = models.ImageField()
     order = models.IntegerField()
     product_line = models.ForeignKey(ProductLine, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "inventory_product_image"
 
 
 class ProductLine_AttributeValue(models.Model):
