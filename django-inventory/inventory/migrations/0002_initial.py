@@ -362,4 +362,11 @@ class Migration(migrations.Migration):
                 EXECUTE FUNCTION lowercase_name_trigger();
             """
         ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_category
+                ADD CONSTRAINT inventory_category_chk_slug_format
+                CHECK (slug ~ '^[a-z0-9_-]+$' AND lower(slug) = slug);
+            """
+        ),
     ]
