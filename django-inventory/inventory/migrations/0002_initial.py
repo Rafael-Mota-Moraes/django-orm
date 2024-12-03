@@ -376,4 +376,11 @@ class Migration(migrations.Migration):
                 UNIQUE (name, level);
             """
         ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_category
+                ADD CONSTRAINT inventory_category_chk_level_range
+                CHECK (level >= 0 AND level <= 10);
+            """
+        ),
     ]
