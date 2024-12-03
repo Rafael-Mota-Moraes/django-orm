@@ -383,4 +383,27 @@ class Migration(migrations.Migration):
                 CHECK (level >= 0 AND level <= 10);
             """
         ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_seasonal_event
+                ADD CONSTRAINT inventory_seasonal_event_chk_empty_name
+                CHECK (name <> '' AND name is NOT NULL)
+            """
+        ),
+        migrations.RunSQL(
+            """
+                CREATE OR REPLACE FUNCTION lowercase_name_trigger()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                    NEW.name := LOWER(NEW.name);
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+
+                CREATE TRIGGER seasonal_event_lowercase_name_trigger
+                BEFORE INSERT OR UPDATE ON inventory_seasonal_event
+                FOR EACH ROW
+                EXECUTE FUNCTION lowercase_name_trigger();
+            """
+        ),
     ]
