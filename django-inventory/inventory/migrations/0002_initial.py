@@ -406,4 +406,41 @@ class Migration(migrations.Migration):
                 EXECUTE FUNCTION lowercase_name_trigger();
             """
         ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_product_type
+                ADD CONSTRAINT inventory_product_type_chk_empty_name
+                CHECK (name <> '' AND name is NOT NULL)
+            """
+        ),
+        migrations.RunSQL(
+            """
+                CREATE OR REPLACE FUNCTION lowercase_name_trigger()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                    NEW.name := LOWER(NEW.name);
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+
+                CREATE TRIGGER product_type_lowercase_name_trigger
+                BEFORE INSERT OR UPDATE ON inventory_product_type
+                FOR EACH ROW
+                EXECUTE FUNCTION lowercase_name_trigger();
+            """
+        ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_product_type
+                ADD CONSTRAINT inventory_product_type_chk_unique_name_level
+                UNIQUE (name, level);
+            """
+        ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_product_type
+                ADD CONSTRAINT inventory_product_type_chk_level_range
+                CHECK (level >= 0 AND level <= 10);
+            """
+        ),
     ]
