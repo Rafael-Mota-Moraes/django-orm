@@ -460,8 +460,8 @@ class Migration(migrations.Migration):
                 END;
                 $$ LANGUAGE plpgsql;
 
-                CREATE TRIGGER seasonal_event_lowercase_name_trigger
-                BEFORE INSERT OR UPDATE ON inventory_seasonal_event
+                CREATE TRIGGER attribute_lowercase_name_trigger
+                BEFORE INSERT OR UPDATE ON inventory_attribute
                 FOR EACH ROW
                 EXECUTE FUNCTION lowercase_name_trigger();
             """
