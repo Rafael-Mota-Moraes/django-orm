@@ -547,4 +547,11 @@ class Migration(migrations.Migration):
                 CHECK (stock_qty >= 0);
             """
         ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_product_image
+                ADD CONSTRAINT inventory_product_image_chk_unique_product_order
+                CHECK (product_product_line, "order");
+            """
+        ),
     ]
