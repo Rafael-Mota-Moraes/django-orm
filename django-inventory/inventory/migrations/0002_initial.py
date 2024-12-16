@@ -496,4 +496,34 @@ class Migration(migrations.Migration):
                 CHECK (slug ~ '^[a-z0-9_-]+$' AND lower(slug) = slug);
             """
         ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_product
+                ADD CONSTRAINT inventory_product_chk_empty_name
+                CHECK (name <> '' AND name is NOT NULL)
+            """
+        ),
+        migrations.RunSQL(
+            """
+                CREATE OR REPLACE FUNCTION lowercase_name_trigger()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                    NEW.name := LOWER(NEW.name);
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+
+                CREATE TRIGGER product_lowercase_name_trigger
+                BEFORE INSERT OR UPDATE ON inventory_product
+                FOR EACH ROW
+                EXECUTE FUNCTION lowercase_name_trigger();
+            """
+        ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_product
+                ADD CONSTRAINT inventory_product_chk_slug_format
+                CHECK (slug ~ '^[a-z0-9_-]+$' AND lower(slug) = slug);
+            """
+        ),
     ]
