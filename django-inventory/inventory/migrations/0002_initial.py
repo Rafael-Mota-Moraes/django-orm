@@ -526,4 +526,11 @@ class Migration(migrations.Migration):
                 CHECK (slug ~ '^[a-z0-9_-]+$' AND lower(slug) = slug);
             """
         ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_attribute_value
+                ADD CONSTRAINT inventory_attribute_value_chk_unique_name_level
+                UNIQUE (attribute_id, attribute_value);
+            """
+        ),
     ]
