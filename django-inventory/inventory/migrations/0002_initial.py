@@ -533,4 +533,18 @@ class Migration(migrations.Migration):
                 UNIQUE (attribute_id, attribute_value);
             """
         ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_product_line
+                ADD CONSTRAINT inventory_product_line_chk_price_postive
+                CHECK (price > 0);
+            """
+        ),
+        migrations.RunSQL(
+            """
+                ALTER TABLE inventory_product_line
+                ADD CONSTRAINT inventory_product_line_chk_stock_postive
+                CHECK (stock_qty >= 0);
+            """
+        ),
     ]
